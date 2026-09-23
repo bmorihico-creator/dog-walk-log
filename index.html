@@ -408,6 +408,30 @@ h1 {
   font-size: 10px;
 }
 
+.today-guide {
+  margin: -3px 3px 15px;
+  color: #7c6d60;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.save-notice {
+  min-height: 22px;
+  margin: 0 3px 9px;
+  color: #80674d;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.walk-btn {
+  transition: background .15s, color .15s, transform .15s;
+}
+
+.walk-btn:focus-visible {
+  outline: 3px solid #765740;
+  outline-offset: 2px;
+}
+
 /* LOADING */
 
 .loading {
@@ -556,6 +580,12 @@ h1 {
     <div class="section-title">
       🐶 오늘의 산책 체크
     </div>
+
+    <div class="today-guide">
+      ○ 산책했어요 &nbsp; × 오늘은 쉬어요<br>
+      같은 버튼을 다시 누르면 선택이 취소돼요.
+    </div>
+    <div id="saveNotice" class="save-notice" role="status" aria-live="polite"></div>
 
 
     <div
@@ -716,6 +746,33 @@ const dogs = [
 
 
 let records = [];
+const pendingSaves = new Map();
+let noticeTimer;
+
+function showSaveNotice(message) {
+  const notice = document.getElementById("saveNotice");
+  notice.textContent = message;
+  clearTimeout(noticeTimer);
+  if (message === "저장됐어요.") {
+    noticeTimer = setTimeout(function() {
+      if (notice.textContent === message) notice.textContent = "";
+    }, 2400);
+  }
+}
+
+function setLocalStatus(date, dog, status) {
+  const existing = records.find(function(item) {
+    return item.date === date && item.dog === dog;
+  });
+  if (existing) existing.status = status;
+  else records.push({date: date, dog: dog, status: status});
+}
+
+function redraw() {
+  drawToday();
+  drawMonth();
+  drawStats();
+}
 
 
 /* =====================================
@@ -761,12 +818,11 @@ async function loadData() {
     const response =
       await fetch(API);
 
-    records =
-      await response.json();
-
-    drawToday();
-    drawMonth();
-    drawStats();
+    if (!response.ok) throw new Error("불러오기 실패");
+    const data = await response.json();
+    if (!Array.isArray(data)) throw new Error("기록 형식 오류");
+    records = data;
+    redraw();
 
   } catch(error) {
 
@@ -778,9 +834,7 @@ async function loadData() {
     document.getElementById("error").textContent =
       "기록을 불러오지 못했어요.";
 
-    drawToday();
-    drawMonth();
-    drawStats();
+    redraw();
 
   }
 
@@ -803,7 +857,7 @@ function getStatus(date,dog) {
 
     });
 
-  return found
+  return found && (found.status === "y" || found.status === "n")
     ? found.status
     : "";
 
@@ -933,68 +987,62 @@ function updateTodayRate() {
    저장
 ===================================== */
 
-async function saveWalk(dog,status,dateValue) {
+function saveWalk(dog, chosenStatus, dateValue) {
+  const saveDate = dateValue || today;
+  const previous = getStatus(saveDate, dog);
+  const next = previous === chosenStatus ? "u" : chosenStatus;
+  const key = saveDate + "|" + dog;
 
-  const saveDate =
-    dateValue || today;
+  // 화면은 즉시 바꾸고, 빠른 연속 누름은 마지막 선택만 저장한다.
+  setLocalStatus(saveDate, dog, next);
+  redraw();
+  showSaveNotice("저장 중...");
 
-
-  const url =
-    API +
-    "?date=" +
-    encodeURIComponent(saveDate) +
-    "&dog=" +
-    encodeURIComponent(dog) +
-    "&status=" +
-    encodeURIComponent(status);
-
-
-  try {
-
-    await fetch(url);
-
-
-    const existing =
-      records.find(function(item) {
-
-        return (
-          item.date === saveDate &&
-          item.dog === dog
-        );
-
-      });
-
-
-    if(existing) {
-
-      existing.status =
-        status;
-
-    } else {
-
-      records.push({
-
-        date: saveDate,
-        dog: dog,
-        status: status
-
-      });
-
-    }
-
-
-    drawToday();
-    drawMonth();
-    drawStats();
-
-  } catch(error) {
-
-    alert("저장에 실패했어요.");
-
+  let task = pendingSaves.get(key);
+  if (!task) {
+    task = {date: saveDate, dog: dog, desired: next,
+            confirmed: previous, timer: null, running: false};
+    pendingSaves.set(key, task);
   }
+  task.desired = next;
 
+  if (!task.running) {
+    clearTimeout(task.timer);
+    task.timer = setTimeout(function() { flushSave(key); }, 350);
+  }
 }
 
+async function flushSave(key) {
+  const task = pendingSaves.get(key);
+  if (!task || task.running) return;
+  task.running = true;
+  const sent = task.desired;
+  const url = API + "?date=" + encodeURIComponent(task.date) +
+    "&dog=" + encodeURIComponent(task.dog) +
+    "&status=" + encodeURIComponent(sent);
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("저장 실패");
+    const result = await response.json();
+    if (!result || result.success !== true) throw new Error("저장 실패");
+    task.confirmed = sent;
+    if (task.desired !== sent) {
+      task.running = false;
+      flushSave(key);
+    } else {
+      pendingSaves.delete(key);
+      if (pendingSaves.size === 0) showSaveNotice("저장됐어요.");
+    }
+  } catch (error) {
+    console.error(error);
+    clearTimeout(task.timer);
+    pendingSaves.delete(key);
+    setLocalStatus(task.date, task.dog, task.confirmed);
+    redraw();
+    showSaveNotice("저장에 실패했어요. 연결을 확인하고 다시 눌러주세요.");
+  }
+}
 
 /* =====================================
    이번 달 표
