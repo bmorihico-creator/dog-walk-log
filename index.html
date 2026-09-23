@@ -201,19 +201,55 @@ h1 {
 /* MONTH */
 
 .month-header {
-  padding: 20px;
+  padding: 16px;
   margin-bottom: 13px;
 }
 
-.month-title {
-  font-size: 20px;
+.month-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.month-arrow {
+  flex: 0 0 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 11px;
+  background: #eee7de;
+  color: #55483d;
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.month-picker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 0;
+  font-size: 18px;
   font-weight: 850;
+  white-space: nowrap;
+}
+
+.month-picker select {
+  border: 1px solid #e8ddcf;
+  border-radius: 9px;
+  padding: 6px 4px;
+  background: #fffdf9;
+  color: #403a35;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 800;
 }
 
 .month-summary {
-  margin-top: 6px;
+  margin-top: 10px;
   color: #91867c;
   font-size: 12px;
+  text-align: center;
 }
 
 .month-table-wrap {
@@ -227,7 +263,6 @@ h1 {
 .month-table {
   border-collapse: separate;
   border-spacing: 0;
-  min-width: 970px;
   width: max-content;
   font-size: 12px;
 }
@@ -237,53 +272,61 @@ h1 {
   border-right: 1px solid #eee8df;
   border-bottom: 1px solid #eee8df;
   text-align: center;
-  height: 48px;
-  padding: 5px;
+  height: 46px;
+  padding: 0;
 }
 
-.month-table th {
-  background: #f3eee7;
-  color: #665a4f;
-  font-weight: 850;
+.month-table thead th {
   position: sticky;
   top: 0;
   z-index: 2;
-}
-
-.month-table th:first-child,
-.month-table td:first-child {
-  position: sticky;
-  left: 0;
-  z-index: 3;
-  background: #fffdf9;
-}
-
-.month-table th:first-child {
-  background: #eee7de;
-  z-index: 5;
-}
-
-.month-table .date-cell {
-  min-width: 62px;
-  font-weight: 800;
+  width: 44px;
+  min-width: 44px;
+  background: #f3eee7;
   color: #665a4f;
+  font-weight: 850;
 }
 
 .month-table .dog-head {
-  min-width: 64px;
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  width: 82px;
+  min-width: 82px;
+  padding: 0 6px;
+  background: #fffdf9;
+  color: #665a4f;
+  font-weight: 800;
+}
+
+.month-table thead .dog-head {
+  z-index: 5;
+  background: #eee7de;
 }
 
 .month-table .walk-cell {
-  min-width: 64px;
+  width: 44px;
+  min-width: 44px;
   cursor: pointer;
   user-select: none;
   font-size: 20px;
   font-weight: 900;
-  transition: .15s;
 }
 
-.month-table .walk-cell:active {
-  transform: scale(.9);
+.month-table .walk-cell button {
+  display: block;
+  width: 100%;
+  min-height: 46px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.month-table .walk-cell button:focus-visible {
+  outline: 3px solid #765740;
+  outline-offset: -3px;
 }
 
 .month-table .walk-yes {
@@ -299,28 +342,17 @@ h1 {
   color: #d2cbc3;
 }
 
-.month-table .day-rate {
-  min-width: 70px;
-  font-size: 11px;
-  font-weight: 800;
-  color: #9b7c5e;
-  background: #faf6f0;
-}
-
-.month-table .today-row td {
+.month-table .today-col {
   background: #f8f0e6;
 }
 
-.month-table .today-row td:first-child {
+.month-table thead .today-col {
   background: #eee0cf;
 }
 
-.month-table .today-row .walk-yes {
-  background: #f3e5d3;
-}
-
-.month-table .future-row {
-  opacity: .45;
+.month-table .future-col {
+  color: #c8c0b7;
+  background: #faf8f5;
 }
 
 .month-help {
@@ -610,18 +642,15 @@ h1 {
     class="hidden">
 
     <div class="month-header card">
-
-      <div
-        class="month-title"
-        id="monthTitle">
+      <div class="month-controls">
+        <button class="month-arrow" type="button" onclick="moveMonth(-1)" aria-label="이전 달">‹</button>
+        <div class="month-picker">
+          <select id="yearSelect" aria-label="연도 선택" onchange="selectYear(this.value)"></select>
+          <span id="monthTitle"></span>
+        </div>
+        <button class="month-arrow" type="button" onclick="moveMonth(1)" aria-label="다음 달">›</button>
       </div>
-
-      <div
-        class="month-summary"
-        id="monthSummary">
-        이번 달 산책 기록
-      </div>
-
+      <div class="month-summary" id="monthSummary">산책 기록</div>
     </div>
 
 
@@ -637,7 +666,7 @@ h1 {
 
 
     <div class="month-help">
-      💡 ○ / × 를 누르면 산책 기록을 바로 수정할 수 있어요
+      💡 날짜를 오른쪽으로 밀어 보세요. 칸을 누르면 · → ○ → × → · 순서로 바뀌어요.
     </div>
 
   </section>
@@ -770,8 +799,12 @@ function setLocalStatus(date, dog, status) {
 
 function redraw() {
   drawToday();
-  drawMonth();
-  drawStats();
+  if (!document.getElementById("pageMonth").classList.contains("hidden")) {
+    drawMonth();
+  }
+  if (!document.getElementById("pageStats").classList.contains("hidden")) {
+    drawStats();
+  }
 }
 
 
@@ -801,6 +834,9 @@ const currentYear =
 
 const currentMonth =
   Number(today.substring(5,7));
+
+let viewedYear = currentYear;
+let viewedMonth = currentMonth;
 
 
 document.getElementById("today").textContent =
@@ -1048,259 +1084,131 @@ async function flushSave(key) {
    이번 달 표
 ===================================== */
 
+function moveMonth(direction) {
+  const target = new Date(viewedYear, viewedMonth - 1 + direction, 1);
+  viewedYear = target.getFullYear();
+  viewedMonth = target.getMonth() + 1;
+  drawMonth();
+}
+
+function selectYear(year) {
+  viewedYear = Number(year);
+  drawMonth();
+}
+
 function drawMonth() {
-
-  const calendar =
-    document.getElementById("calendar");
-
+  const calendar = document.getElementById("calendar");
+  const previousScroll = calendar.querySelector(".month-table-wrap");
+  const scrollLeft = previousScroll ? previousScroll.scrollLeft : 0;
   calendar.innerHTML = "";
 
+  const yearSelect = document.getElementById("yearSelect");
+  if (yearSelect.options.length === 0 ||
+      Number(yearSelect.options[0].value) > viewedYear ||
+      Number(yearSelect.options[yearSelect.options.length - 1].value) < viewedYear) {
+    yearSelect.innerHTML = "";
+    const first = Math.min(currentYear - 10, viewedYear);
+    const last = Math.max(currentYear + 10, viewedYear);
+    for (let year = first; year <= last; year++) {
+      const option = document.createElement("option");
+      option.value = year;
+      option.textContent = year + "년";
+      yearSelect.appendChild(option);
+    }
+  }
+  yearSelect.value = String(viewedYear);
+  document.getElementById("monthTitle").textContent = viewedMonth + "월";
 
-  const monthText =
-    currentYear +
-    "년 " +
-    currentMonth +
-    "월";
+  const daysInMonth = new Date(viewedYear, viewedMonth, 0).getDate();
+  const tableWrap = document.createElement("div");
+  tableWrap.className = "month-table-wrap";
+  const table = document.createElement("table");
+  table.className = "month-table";
+  table.setAttribute("aria-label", viewedYear + "년 " + viewedMonth + "월 강아지별 산책 기록");
 
+  const dates = [];
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+  const corner = document.createElement("th");
+  corner.className = "dog-head";
+  corner.textContent = "이름";
+  headerRow.appendChild(corner);
 
-  document.getElementById("monthTitle").textContent =
-    monthText;
-
-
-  const daysInMonth =
-    new Date(
-      currentYear,
-      currentMonth,
-      0
-    ).getDate();
-
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = viewedYear + "-" +
+      String(viewedMonth).padStart(2, "0") + "-" +
+      String(day).padStart(2, "0");
+    dates.push(date);
+    const heading = document.createElement("th");
+    heading.scope = "col";
+    heading.textContent = day;
+    if (date === today) heading.classList.add("today-col");
+    if (date > today) heading.classList.add("future-col");
+    headerRow.appendChild(heading);
+  }
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
 
   let totalDone = 0;
   let totalPossible = 0;
-
-
-  const tableWrap =
-    document.createElement("div");
-
-  tableWrap.className =
-    "month-table-wrap";
-
-
-  const table =
-    document.createElement("table");
-
-  table.className =
-    "month-table";
-
-
-  /* 헤더 */
-
-  const thead =
-    document.createElement("thead");
-
-  const headerRow =
-    document.createElement("tr");
-
-
-  let headerHTML =
-    "<th>날짜</th>";
-
+  const tbody = document.createElement("tbody");
 
   dogs.forEach(function(dog) {
+    const row = document.createElement("tr");
+    const label = document.createElement("th");
+    label.scope = "row";
+    label.className = "dog-head";
+    label.textContent = dog;
+    row.appendChild(label);
 
-    headerHTML +=
-      `<th class="dog-head">${dog}</th>`;
-
-  });
-
-
-  headerHTML +=
-    "<th>산책률</th>";
-
-
-  headerRow.innerHTML =
-    headerHTML;
-
-  thead.appendChild(headerRow);
-
-  table.appendChild(thead);
-
-
-  /* 본문 */
-
-  const tbody =
-    document.createElement("tbody");
-
-
-  for(
-    let day = 1;
-    day <= daysInMonth;
-    day++
-  ) {
-
-    const date =
-      currentYear +
-      "-" +
-      String(currentMonth).padStart(2,"0") +
-      "-" +
-      String(day).padStart(2,"0");
-
-
-    const isFuture =
-      date > today;
-
-
-    let done = 0;
-
-
-    dogs.forEach(function(dog) {
-
-      if(
-        getStatus(date,dog) === "y"
-      ) {
-
-        done++;
-
+    dates.forEach(function(date) {
+      const status = getStatus(date, dog);
+      const future = date > today;
+      if (!future) {
+        totalPossible++;
+        if (status === "y") totalDone++;
       }
 
-    });
+      const cell = document.createElement("td");
+      cell.className = "walk-cell " +
+        (status === "y" ? "walk-yes" :
+         status === "n" ? "walk-no" : "walk-empty");
+      if (date === today) cell.classList.add("today-col");
+      if (future) cell.classList.add("future-col");
 
-
-    if(!isFuture) {
-
-      totalDone += done;
-
-      totalPossible +=
-        dogs.length;
-
-    }
-
-
-    const percent =
-      isFuture
-      ? "-"
-      : Math.round(
-          (done / dogs.length) * 100
-        ) + "%";
-
-
-    const row =
-      document.createElement("tr");
-
-
-    if(date === today) {
-
-      row.classList.add(
-        "today-row"
-      );
-
-    }
-
-
-    if(isFuture) {
-
-      row.classList.add(
-        "future-row"
-      );
-
-    }
-
-
-    let rowHTML =
-      `<td class="date-cell">
-        ${currentMonth}/${day}
-      </td>`;
-
-
-    dogs.forEach(function(dog) {
-
-      const status =
-        getStatus(date,dog);
-
-
-      let symbol = "·";
-
-      let className =
-        "walk-cell walk-empty";
-
-
-      if(status === "y") {
-
-        symbol = "○";
-
-        className =
-          "walk-cell walk-yes";
-
-      }
-
-
-      if(status === "n") {
-
-        symbol = "×";
-
-        className =
-          "walk-cell walk-no";
-
-      }
-
-
-      if(isFuture) {
-
-        rowHTML +=
-          `<td class="${className}">${symbol}</td>`;
-
+      if (future) {
+        cell.textContent = "·";
       } else {
-
-        rowHTML +=
-          `<td
-            class="${className}"
-            onclick="saveWalk('${dog}', '${status === "y" ? "n" : "y"}', '${date}')">
-            ${symbol}
-          </td>`;
-
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = status === "y" ? "○" :
+          status === "n" ? "×" : "·";
+        const next = status === "y" ? "n" :
+          status === "n" ? "n" : "y";
+        button.setAttribute("aria-label",
+          dog + " " + date + " " +
+          (status === "y" ? "산책 완료, 누르면 쉬는 날" :
+           status === "n" ? "쉬는 날, 누르면 선택 취소" :
+                            "미기록, 누르면 산책 완료"));
+        button.addEventListener("click", function() {
+          saveWalk(dog, next, date);
+        });
+        cell.appendChild(button);
       }
-
+      row.appendChild(cell);
     });
-
-
-    rowHTML +=
-      `<td class="day-rate">
-        ${percent}
-      </td>`;
-
-
-    row.innerHTML =
-      rowHTML;
-
-
     tbody.appendChild(row);
-
-  }
-
-
+  });
   table.appendChild(tbody);
-
   tableWrap.appendChild(table);
-
   calendar.appendChild(tableWrap);
+  tableWrap.scrollLeft = scrollLeft;
 
-
-  const monthRate =
-    totalPossible === 0
-    ? 0
-    : Math.round(
-        (totalDone / totalPossible) * 100
-      );
-
-
+  const monthRate = totalPossible === 0 ? 0 :
+    Math.round(totalDone / totalPossible * 100);
   document.getElementById("monthSummary").textContent =
-    "이번 달 전체 산책률 " +
-    monthRate +
-    "% · ○ / × 를 눌러 기록 수정";
-
-
+    "산책 완료 " + totalDone + "회 · 전체 산책률 " + monthRate + "%";
 }
-
 
 /* =====================================
    통계
