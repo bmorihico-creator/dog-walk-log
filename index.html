@@ -1,1 +1,489 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>우리집 댕댕이 산책일지</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f7f3ed;
+      color: #403a35;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans KR",
+        sans-serif;
+    }
+
+    .app {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 28px 18px 50px;
+    }
+
+    .header {
+      margin-bottom: 22px;
+    }
+
+    .eyebrow {
+      font-size: 13px;
+      font-weight: 700;
+      color: #9b8068;
+      margin-bottom: 7px;
+      letter-spacing: 0.5px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 29px;
+      letter-spacing: -1.5px;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: #8b8178;
+      font-size: 14px;
+    }
+
+    .date-card {
+      background: #fffdf9;
+      border-radius: 22px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 5px 20px rgba(80, 60, 40, 0.07);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .date-label {
+      font-size: 13px;
+      color: #9b9188;
+      margin-bottom: 4px;
+    }
+
+    .today {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+    }
+
+    .rate {
+      text-align: right;
+    }
+
+    .rate-number {
+      font-size: 25px;
+      font-weight: 800;
+    }
+
+    .rate-label {
+      font-size: 12px;
+      color: #9b9188;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 800;
+      margin: 25px 3px 11px;
+    }
+
+    .dog-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .dog-card {
+      background: #fffdf9;
+      border-radius: 18px;
+      padding: 15px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 3px 14px rgba(80, 60, 40, 0.055);
+    }
+
+    .dog-name {
+      font-size: 16px;
+      font-weight: 750;
+    }
+
+    .status {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #aaa098;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 7px;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      width: 46px;
+      height: 40px;
+      border-radius: 13px;
+      font-size: 18px;
+      font-weight: 800;
+      transition: 0.15s;
+    }
+
+    button:active {
+      transform: scale(0.94);
+    }
+
+    .yes {
+      background: #eee9e1;
+      color: #827464;
+    }
+
+    .no {
+      background: #eee9e1;
+      color: #827464;
+    }
+
+    .yes.active {
+      background: #b99b78;
+      color: white;
+      box-shadow: 0 4px 10px rgba(150, 120, 85, 0.25);
+    }
+
+    .no.active {
+      background: #8f8881;
+      color: white;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 35px 0;
+      color: #999087;
+    }
+
+    .bottom-info {
+      margin-top: 25px;
+      padding: 17px;
+      background: #eee7de;
+      border-radius: 17px;
+      text-align: center;
+      font-size: 12px;
+      color: #8d8277;
+      line-height: 1.6;
+    }
+
+    .error {
+      background: #f1dddd;
+      color: #875d5d;
+      padding: 14px;
+      border-radius: 15px;
+      font-size: 13px;
+      margin-bottom: 15px;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="header">
+    <div class="eyebrow">🐾 DAILY DOG WALK</div>
+    <h1>우리집 댕댕이 산책일지</h1>
+    <div class="subtitle">오늘 우리 아이들은 산책했을까요?</div>
+  </div>
+
+  <div class="date-card">
+    <div>
+      <div class="date-label">TODAY</div>
+      <div class="today" id="today"></div>
+    </div>
+
+    <div class="rate">
+      <div class="rate-number" id="rate">0%</div>
+      <div class="rate-label">오늘 산책률</div>
+    </div>
+  </div>
+
+  <div class="error" id="error"></div>
+
+  <div class="section-title">🐶 오늘의 산책 체크</div>
+
+  <div class="dog-list" id="dogList">
+    <div class="loading">강아지들을 불러오는 중...</div>
+  </div>
+
+  <div class="bottom-info">
+    ○ 산책 완료 &nbsp;&nbsp; × 오늘은 못 갔어요<br>
+    기록은 함께 사용하는 산책일지에 저장됩니다.
+  </div>
+
+</div>
+
+
+<script>
+
+  // ==========================
+  // Google Apps Script 주소
+  // ==========================
+
+  const API =
+    "https://script.google.com/macros/s/AKfycbwXn6-HoEyTpKpA0p91VXeLAh9FbVIMnzpWLJj4_3N0RJJVTAoWsOE5KEBZuEBi52haJA/exec";
+
+
+  // ==========================
+  // 우리집 강아지
+  // ==========================
+
+  const dogs = [
+    "짜장",
+    "카오",
+    "두꽃",
+    "완두",
+    "보보",
+    "송",
+    "빈",
+    "채채",
+    "양파",
+    "무지",
+    "타오",
+    "카노",
+    "로랑"
+  ];
+
+
+  // ==========================
+  // 오늘 날짜
+  // ==========================
+
+  function getToday() {
+
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month =
+      String(now.getMonth() + 1).padStart(2, "0");
+    const day =
+      String(now.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
+
+  const today = getToday();
+
+  document.getElementById("today").textContent =
+    today.replaceAll("-", ". ");
+
+
+  // ==========================
+  // 데이터 불러오기
+  // ==========================
+
+  let records = [];
+
+
+  async function loadData() {
+
+    try {
+
+      const response = await fetch(API);
+
+      records = await response.json();
+
+      drawDogs();
+
+    } catch (error) {
+
+      console.error(error);
+
+      document.getElementById("error").style.display =
+        "block";
+
+      document.getElementById("error").textContent =
+        "기록을 불러오지 못했어요. 잠시 후 다시 시도해주세요.";
+
+      drawDogs();
+
+    }
+  }
+
+
+  // ==========================
+  // 오늘 기록 찾기
+  // ==========================
+
+  function getStatus(dog) {
+
+    const record = records.find(function(item) {
+
+      return (
+        item.date === today &&
+        item.dog === dog
+      );
+
+    });
+
+    return record ? record.status : "";
+
+  }
+
+
+  // ==========================
+  // 화면 그리기
+  // ==========================
+
+  function drawDogs() {
+
+    const container =
+      document.getElementById("dogList");
+
+    container.innerHTML = "";
+
+    dogs.forEach(function(dog) {
+
+      const status = getStatus(dog);
+
+      const card =
+        document.createElement("div");
+
+      card.className = "dog-card";
+
+      card.innerHTML = `
+
+        <div>
+          <div class="dog-name">${dog}</div>
+
+          <div class="status">
+            ${
+              status === "y"
+                ? "오늘 산책 완료 🐾"
+                : status === "n"
+                  ? "오늘은 쉬는 날"
+                  : "아직 기록하지 않았어요"
+            }
+          </div>
+        </div>
+
+        <div class="buttons">
+
+          <button
+            class="yes ${status === "y" ? "active" : ""}"
+            onclick="saveWalk('${dog}', 'y')">
+            ○
+          </button>
+
+          <button
+            class="no ${status === "n" ? "active" : ""}"
+            onclick="saveWalk('${dog}', 'n')">
+            ×
+          </button>
+
+        </div>
+      `;
+
+      container.appendChild(card);
+
+    });
+
+    updateRate();
+  }
+
+
+  // ==========================
+  // 산책률
+  // ==========================
+
+  function updateRate() {
+
+    let done = 0;
+
+    dogs.forEach(function(dog) {
+
+      if (getStatus(dog) === "y") {
+        done++;
+      }
+
+    });
+
+    const percent =
+      Math.round((done / dogs.length) * 100);
+
+    document.getElementById("rate").textContent =
+      percent + "%";
+  }
+
+
+  // ==========================
+  // 저장
+  // ==========================
+
+  async function saveWalk(dog, status) {
+
+    try {
+
+      const url =
+        API +
+        "?date=" + encodeURIComponent(today) +
+        "&dog=" + encodeURIComponent(dog) +
+        "&status=" + encodeURIComponent(status);
+
+      await fetch(url);
+
+      // 화면에서도 즉시 변경
+      const existing =
+        records.find(function(item) {
+
+          return (
+            item.date === today &&
+            item.dog === dog
+          );
+
+        });
+
+
+      if (existing) {
+
+        existing.status = status;
+
+      } else {
+
+        records.push({
+          date: today,
+          dog: dog,
+          status: status
+        });
+
+      }
+
+      drawDogs();
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert("저장에 실패했어요. 다시 눌러주세요.");
+
+    }
+  }
+
+
+  // ==========================
+  // 시작
+  // ==========================
+
+  loadData();
+
+</script>
+
+</body>
+</html>
