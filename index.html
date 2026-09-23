@@ -29,7 +29,7 @@ button {
 }
 
 .app {
-  max-width: 760px;
+  max-width: 1100px;
   margin: auto;
   padding: 24px 16px 50px;
 }
@@ -214,52 +214,118 @@ h1 {
   font-size: 12px;
 }
 
-.calendar {
-  display: grid;
-  gap: 8px;
-}
-
-.day-card {
+.month-table-wrap {
   background: #fffdf9;
-  border-radius: 17px;
-  padding: 13px 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  border-radius: 20px;
+  box-shadow: 0 5px 20px rgba(70,50,30,.06);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-.day-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.month-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 970px;
+  width: max-content;
+  font-size: 12px;
 }
 
-.day-number {
-  width: 39px;
-  height: 39px;
-  border-radius: 13px;
-  background: #eee8df;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.month-table th,
+.month-table td {
+  border-right: 1px solid #eee8df;
+  border-bottom: 1px solid #eee8df;
+  text-align: center;
+  height: 48px;
+  padding: 5px;
+}
+
+.month-table th {
+  background: #f3eee7;
+  color: #665a4f;
   font-weight: 850;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
-.day-info strong {
-  font-size: 14px;
+.month-table th:first-child,
+.month-table td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: #fffdf9;
 }
 
-.day-info small {
-  display: block;
-  color: #aaa098;
-  margin-top: 3px;
+.month-table th:first-child {
+  background: #eee7de;
+  z-index: 5;
+}
+
+.month-table .date-cell {
+  min-width: 62px;
+  font-weight: 800;
+  color: #665a4f;
+}
+
+.month-table .dog-head {
+  min-width: 64px;
+}
+
+.month-table .walk-cell {
+  min-width: 64px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 20px;
+  font-weight: 900;
+  transition: .15s;
+}
+
+.month-table .walk-cell:active {
+  transform: scale(.9);
+}
+
+.month-table .walk-yes {
+  color: #a18160;
+  background: #fbf7f0;
+}
+
+.month-table .walk-no {
+  color: #9b938c;
+}
+
+.month-table .walk-empty {
+  color: #d2cbc3;
+}
+
+.month-table .day-rate {
+  min-width: 70px;
   font-size: 11px;
-}
-
-.day-rate {
-  font-size: 13px;
   font-weight: 800;
   color: #9b7c5e;
+  background: #faf6f0;
+}
+
+.month-table .today-row td {
+  background: #f8f0e6;
+}
+
+.month-table .today-row td:first-child {
+  background: #eee0cf;
+}
+
+.month-table .today-row .walk-yes {
+  background: #f3e5d3;
+}
+
+.month-table .future-row {
+  opacity: .45;
+}
+
+.month-help {
+  margin-top: 10px;
+  color: #a0978e;
+  font-size: 11px;
+  text-align: center;
 }
 
 /* STATISTICS */
@@ -390,6 +456,11 @@ h1 {
   .walk-btn {
     width: 41px;
   }
+
+  .month-table {
+    min-width: 950px;
+  }
+
 }
 </style>
 </head>
@@ -399,24 +470,43 @@ h1 {
 <div class="app">
 
   <div class="header">
-    <div class="eyebrow">🐾 DAILY DOG WALK</div>
-    <h1>우리집 댕댕이 산책일지</h1>
-    <div class="subtitle">우리 아이들의 산책을 함께 기록해요</div>
+
+    <div class="eyebrow">
+      🐾 DAILY DOG WALK
+    </div>
+
+    <h1>
+      우리집 댕댕이 산책일지
+    </h1>
+
+    <div class="subtitle">
+      우리 아이들의 산책을 함께 기록해요
+    </div>
+
   </div>
 
 
   <div class="nav">
-    <button id="navToday" class="active" onclick="showPage('today')">
+
+    <button
+      id="navToday"
+      class="active"
+      onclick="showPage('today')">
       🐾 오늘
     </button>
 
-    <button id="navMonth" onclick="showPage('month')">
+    <button
+      id="navMonth"
+      onclick="showPage('month')">
       📅 이번 달
     </button>
 
-    <button id="navStats" onclick="showPage('stats')">
+    <button
+      id="navStats"
+      onclick="showPage('stats')">
       📊 통계
     </button>
+
   </div>
 
 
@@ -432,13 +522,30 @@ h1 {
     <div class="date-card card">
 
       <div>
-        <div class="date-label">TODAY</div>
-        <div class="today" id="today"></div>
+
+        <div class="date-label">
+          TODAY
+        </div>
+
+        <div
+          class="today"
+          id="today">
+        </div>
+
       </div>
 
       <div class="rate">
-        <div class="rate-number" id="todayRate">0%</div>
-        <div class="rate-label">오늘 산책률</div>
+
+        <div
+          class="rate-number"
+          id="todayRate">
+          0%
+        </div>
+
+        <div class="rate-label">
+          오늘 산책률
+        </div>
+
       </div>
 
     </div>
@@ -448,8 +555,15 @@ h1 {
       🐶 오늘의 산책 체크
     </div>
 
-    <div id="dogList" class="dog-list">
-      <div class="loading">기록을 불러오는 중...</div>
+
+    <div
+      id="dogList"
+      class="dog-list">
+
+      <div class="loading">
+        기록을 불러오는 중...
+      </div>
+
     </div>
 
   </section>
@@ -459,20 +573,39 @@ h1 {
   <!-- 이번 달 -->
   <!-- ===================== -->
 
-  <section id="pageMonth" class="hidden">
+  <section
+    id="pageMonth"
+    class="hidden">
 
     <div class="month-header card">
 
-      <div class="month-title" id="monthTitle"></div>
+      <div
+        class="month-title"
+        id="monthTitle">
+      </div>
 
-      <div class="month-summary" id="monthSummary">
+      <div
+        class="month-summary"
+        id="monthSummary">
         이번 달 산책 기록
       </div>
 
     </div>
 
-    <div id="calendar" class="calendar">
-      <div class="loading">불러오는 중...</div>
+
+    <div
+      id="calendar"
+      class="calendar">
+
+      <div class="loading">
+        불러오는 중...
+      </div>
+
+    </div>
+
+
+    <div class="month-help">
+      💡 ○ / × 를 누르면 산책 기록을 바로 수정할 수 있어요
     </div>
 
   </section>
@@ -482,29 +615,39 @@ h1 {
   <!-- 통계 -->
   <!-- ===================== -->
 
-  <section id="pageStats" class="hidden">
+  <section
+    id="pageStats"
+    class="hidden">
 
     <div class="stats-summary">
 
       <div class="summary-box">
+
         <div class="summary-label">
           이번 달 총 산책
         </div>
 
-        <div class="summary-value" id="totalWalks">
+        <div
+          class="summary-value"
+          id="totalWalks">
           0
         </div>
+
       </div>
 
 
       <div class="summary-box">
+
         <div class="summary-label">
           전체 평균 산책률
         </div>
 
-        <div class="summary-value" id="averageRate">
+        <div
+          class="summary-value"
+          id="averageRate">
           0%
         </div>
+
       </div>
 
     </div>
@@ -514,16 +657,26 @@ h1 {
       🐕 강아지별 산책 기록
     </div>
 
-    <div id="statList" class="stat-list">
-      <div class="loading">통계를 계산하는 중...</div>
+
+    <div
+      id="statList"
+      class="stat-list">
+
+      <div class="loading">
+        통계를 계산하는 중...
+      </div>
+
     </div>
 
   </section>
 
 
   <div class="bottom-info">
+
     ○ 산책 완료 &nbsp;&nbsp; × 오늘은 못 갔어요<br>
+
     기록은 함께 사용하는 산책일지에 저장됩니다.
+
   </div>
 
 </div>
@@ -578,6 +731,7 @@ function getToday() {
     "-" +
     String(d.getDate()).padStart(2,"0")
   );
+
 }
 
 
@@ -602,9 +756,11 @@ async function loadData() {
 
   try {
 
-    const response = await fetch(API);
+    const response =
+      await fetch(API);
 
-    records = await response.json();
+    records =
+      await response.json();
 
     drawToday();
     drawMonth();
@@ -623,7 +779,9 @@ async function loadData() {
     drawToday();
     drawMonth();
     drawStats();
+
   }
+
 }
 
 
@@ -631,7 +789,7 @@ async function loadData() {
    특정 기록 찾기
 ===================================== */
 
-function getStatus(date, dog) {
+function getStatus(date,dog) {
 
   const found =
     records.find(function(item) {
@@ -643,7 +801,10 @@ function getStatus(date, dog) {
 
     });
 
-  return found ? found.status : "";
+  return found
+    ? found.status
+    : "";
+
 }
 
 
@@ -662,13 +823,14 @@ function drawToday() {
   dogs.forEach(function(dog) {
 
     const status =
-      getStatus(today, dog);
+      getStatus(today,dog);
 
 
     const card =
       document.createElement("div");
 
-    card.className = "dog-card";
+    card.className =
+      "dog-card";
 
 
     card.innerHTML = `
@@ -680,6 +842,7 @@ function drawToday() {
         </div>
 
         <div class="status">
+
           ${
             status === "y"
             ? "오늘 산책 완료 🐾"
@@ -687,6 +850,7 @@ function drawToday() {
             ? "오늘은 쉬는 날"
             : "아직 기록하지 않았어요"
           }
+
         </div>
 
       </div>
@@ -695,13 +859,21 @@ function drawToday() {
       <div class="buttons">
 
         <button
-          class="walk-btn ${status === "y" ? "active-yes" : ""}"
+          class="walk-btn ${
+            status === "y"
+            ? "active-yes"
+            : ""
+          }"
           onclick="saveWalk('${dog}','y')">
           ○
         </button>
 
         <button
-          class="walk-btn ${status === "n" ? "active-no" : ""}"
+          class="walk-btn ${
+            status === "n"
+            ? "active-no"
+            : ""
+          }"
           onclick="saveWalk('${dog}','n')">
           ×
         </button>
@@ -717,6 +889,7 @@ function drawToday() {
 
 
   updateTodayRate();
+
 }
 
 
@@ -728,10 +901,15 @@ function updateTodayRate() {
 
   let done = 0;
 
+
   dogs.forEach(function(dog) {
 
-    if(getStatus(today,dog) === "y") {
+    if(
+      getStatus(today,dog) === "y"
+    ) {
+
       done++;
+
     }
 
   });
@@ -745,6 +923,7 @@ function updateTodayRate() {
 
   document.getElementById("todayRate").textContent =
     percent + "%";
+
 }
 
 
@@ -752,12 +931,16 @@ function updateTodayRate() {
    저장
 ===================================== */
 
-async function saveWalk(dog,status) {
+async function saveWalk(dog,status,dateValue) {
+
+  const saveDate =
+    dateValue || today;
+
 
   const url =
     API +
     "?date=" +
-    encodeURIComponent(today) +
+    encodeURIComponent(saveDate) +
     "&dog=" +
     encodeURIComponent(dog) +
     "&status=" +
@@ -773,7 +956,7 @@ async function saveWalk(dog,status) {
       records.find(function(item) {
 
         return (
-          item.date === today &&
+          item.date === saveDate &&
           item.dog === dog
         );
 
@@ -782,14 +965,17 @@ async function saveWalk(dog,status) {
 
     if(existing) {
 
-      existing.status = status;
+      existing.status =
+        status;
 
     } else {
 
       records.push({
-        date: today,
+
+        date: saveDate,
         dog: dog,
         status: status
+
       });
 
     }
@@ -804,11 +990,12 @@ async function saveWalk(dog,status) {
     alert("저장에 실패했어요.");
 
   }
+
 }
 
 
 /* =====================================
-   이번 달 화면
+   이번 달 표
 ===================================== */
 
 function drawMonth() {
@@ -830,10 +1017,6 @@ function drawMonth() {
     monthText;
 
 
-  /*
-    이번 달 1일부터 오늘까지 표시
-  */
-
   const daysInMonth =
     new Date(
       currentYear,
@@ -844,6 +1027,59 @@ function drawMonth() {
 
   let totalDone = 0;
   let totalPossible = 0;
+
+
+  const tableWrap =
+    document.createElement("div");
+
+  tableWrap.className =
+    "month-table-wrap";
+
+
+  const table =
+    document.createElement("table");
+
+  table.className =
+    "month-table";
+
+
+  /* 헤더 */
+
+  const thead =
+    document.createElement("thead");
+
+  const headerRow =
+    document.createElement("tr");
+
+
+  let headerHTML =
+    "<th>날짜</th>";
+
+
+  dogs.forEach(function(dog) {
+
+    headerHTML +=
+      `<th class="dog-head">${dog}</th>`;
+
+  });
+
+
+  headerHTML +=
+    "<th>산책률</th>";
+
+
+  headerRow.innerHTML =
+    headerHTML;
+
+  thead.appendChild(headerRow);
+
+  table.appendChild(thead);
+
+
+  /* 본문 */
+
+  const tbody =
+    document.createElement("tbody");
 
 
   for(
@@ -860,13 +1096,8 @@ function drawMonth() {
       String(day).padStart(2,"0");
 
 
-    /*
-      미래 날짜는 표시하지 않음
-    */
-
-    if(date > today) {
-      break;
-    }
+    const isFuture =
+      date > today;
 
 
     let done = 0;
@@ -874,62 +1105,134 @@ function drawMonth() {
 
     dogs.forEach(function(dog) {
 
-      if(getStatus(date,dog) === "y") {
+      if(
+        getStatus(date,dog) === "y"
+      ) {
+
         done++;
+
       }
 
     });
 
 
-    totalDone += done;
-    totalPossible += dogs.length;
+    if(!isFuture) {
+
+      totalDone += done;
+
+      totalPossible +=
+        dogs.length;
+
+    }
 
 
     const percent =
-      Math.round(
-        (done / dogs.length) * 100
+      isFuture
+      ? "-"
+      : Math.round(
+          (done / dogs.length) * 100
+        ) + "%";
+
+
+    const row =
+      document.createElement("tr");
+
+
+    if(date === today) {
+
+      row.classList.add(
+        "today-row"
       );
 
-
-    const card =
-      document.createElement("div");
-
-    card.className = "day-card";
+    }
 
 
-    card.innerHTML = `
+    if(isFuture) {
 
-      <div class="day-left">
+      row.classList.add(
+        "future-row"
+      );
 
-        <div class="day-number">
-          ${day}
-        </div>
-
-        <div class="day-info">
-
-          <strong>
-            ${currentMonth}월 ${day}일
-          </strong>
-
-          <small>
-            ${done}마리 산책
-          </small>
-
-        </div>
-
-      </div>
+    }
 
 
-      <div class="day-rate">
-        ${percent}%
-      </div>
+    let rowHTML =
+      `<td class="date-cell">
+        ${currentMonth}/${day}
+      </td>`;
 
-    `;
+
+    dogs.forEach(function(dog) {
+
+      const status =
+        getStatus(date,dog);
 
 
-    calendar.appendChild(card);
+      let symbol = "·";
+
+      let className =
+        "walk-cell walk-empty";
+
+
+      if(status === "y") {
+
+        symbol = "○";
+
+        className =
+          "walk-cell walk-yes";
+
+      }
+
+
+      if(status === "n") {
+
+        symbol = "×";
+
+        className =
+          "walk-cell walk-no";
+
+      }
+
+
+      if(isFuture) {
+
+        rowHTML +=
+          `<td class="${className}">${symbol}</td>`;
+
+      } else {
+
+        rowHTML +=
+          `<td
+            class="${className}"
+            onclick="saveWalk('${dog}', '${status === "y" ? "n" : "y"}', '${date}')">
+            ${symbol}
+          </td>`;
+
+      }
+
+    });
+
+
+    rowHTML +=
+      `<td class="day-rate">
+        ${percent}
+      </td>`;
+
+
+    row.innerHTML =
+      rowHTML;
+
+
+    tbody.appendChild(row);
 
   }
+
+
+  table.appendChild(tbody);
+
+  tableWrap.appendChild(table);
+
+  calendar.appendChild(tableWrap);
 
 
   const monthRate =
@@ -943,7 +1246,9 @@ function drawMonth() {
   document.getElementById("monthSummary").textContent =
     "이번 달 전체 산책률 " +
     monthRate +
-    "%";
+    "% · ○ / × 를 눌러 기록 수정";
+
+
 }
 
 
@@ -962,59 +1267,59 @@ function drawStats() {
   let totalWalks = 0;
 
 
-  const stats = dogs.map(function(dog) {
+  const stats =
+    dogs.map(function(dog) {
 
-    let count = 0;
-
-
-    records.forEach(function(item) {
-
-      if(
-        item.dog === dog &&
-        item.status === "y" &&
-        item.date &&
-        item.date.substring(0,7) ===
-        today.substring(0,7)
-      ) {
-
-        count++;
-
-      }
-
-    });
+      let count = 0;
 
 
-    totalWalks += count;
+      records.forEach(function(item) {
+
+        if(
+          item.dog === dog &&
+          item.status === "y" &&
+          item.date &&
+          item.date.substring(0,7) ===
+          today.substring(0,7)
+        ) {
+
+          count++;
+
+        }
+
+      });
 
 
-    /*
-      현재 날짜까지를 기준으로 산책률 계산
-    */
-
-    const elapsedDays =
-      Number(today.substring(8,10));
+      totalWalks += count;
 
 
-    const rate =
-      elapsedDays === 0
-      ? 0
-      : Math.round(
-          (count / elapsedDays) * 100
+      const elapsedDays =
+        Number(
+          today.substring(8,10)
         );
 
 
-    return {
-      dog: dog,
-      count: count,
-      rate: Math.min(rate,100)
-    };
+      const rate =
+        elapsedDays === 0
+        ? 0
+        : Math.round(
+            (count / elapsedDays) * 100
+          );
 
-  });
 
+      return {
 
-  /*
-    많이 산책한 강아지가 위로
-  */
+        dog: dog,
+        count: count,
+        rate: Math.min(
+          rate,
+          100
+        )
+
+      };
+
+    });
+
 
   stats.sort(function(a,b) {
 
@@ -1028,7 +1333,8 @@ function drawStats() {
     const card =
       document.createElement("div");
 
-    card.className = "stat-card";
+    card.className =
+      "stat-card";
 
 
     card.innerHTML = `
@@ -1080,18 +1386,28 @@ function drawStats() {
     totalWalks + "회";
 
 
+  const elapsedDays =
+    Number(
+      today.substring(8,10)
+    );
+
+
   const average =
     dogs.length === 0
     ? 0
     : Math.round(
         totalWalks /
-        (dogs.length * Number(today.substring(8,10))) *
+        (dogs.length * elapsedDays) *
         100
       );
 
 
   document.getElementById("averageRate").textContent =
-    Math.min(average,100) + "%";
+    Math.min(
+      average,
+      100
+    ) + "%";
+
 }
 
 
@@ -1156,6 +1472,7 @@ function showPage(page) {
     drawStats();
 
   }
+
 }
 
 
