@@ -1,195 +1,397 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>우리집 댕댕이 산책일지</title>
+<title>우리집 댕댕이 산책일지</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      background: #f7f3ed;
-      color: #403a35;
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "Noto Sans KR",
-        sans-serif;
-    }
+body {
+  margin: 0;
+  background: #f6f2ec;
+  color: #403a35;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Noto Sans KR",
+    sans-serif;
+}
 
-    .app {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 28px 18px 50px;
-    }
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
 
-    .header {
-      margin-bottom: 22px;
-    }
+.app {
+  max-width: 760px;
+  margin: auto;
+  padding: 24px 16px 50px;
+}
 
-    .eyebrow {
-      font-size: 13px;
-      font-weight: 700;
-      color: #9b8068;
-      margin-bottom: 7px;
-      letter-spacing: 0.5px;
-    }
+/* HEADER */
 
-    h1 {
-      margin: 0;
-      font-size: 29px;
-      letter-spacing: -1.5px;
-    }
+.header {
+  padding: 8px 4px 20px;
+}
 
-    .subtitle {
-      margin-top: 8px;
-      color: #8b8178;
-      font-size: 14px;
-    }
+.eyebrow {
+  font-size: 12px;
+  font-weight: 800;
+  color: #a28468;
+  letter-spacing: 1px;
+  margin-bottom: 7px;
+}
 
-    .date-card {
-      background: #fffdf9;
-      border-radius: 22px;
-      padding: 20px;
-      margin-bottom: 18px;
-      box-shadow: 0 5px 20px rgba(80, 60, 40, 0.07);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+h1 {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: -1.5px;
+}
 
-    .date-label {
-      font-size: 13px;
-      color: #9b9188;
-      margin-bottom: 4px;
-    }
+.subtitle {
+  margin-top: 7px;
+  color: #91867c;
+  font-size: 13px;
+}
 
-    .today {
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.8px;
-    }
+/* NAV */
 
-    .rate {
-      text-align: right;
-    }
+.nav {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  background: #ebe4db;
+  padding: 5px;
+  border-radius: 17px;
+  margin-bottom: 17px;
+}
 
-    .rate-number {
-      font-size: 25px;
-      font-weight: 800;
-    }
+.nav button {
+  border: 0;
+  background: transparent;
+  color: #8d8176;
+  padding: 11px 5px;
+  border-radius: 13px;
+  font-size: 13px;
+  font-weight: 700;
+}
 
-    .rate-label {
-      font-size: 12px;
-      color: #9b9188;
-    }
+.nav button.active {
+  background: #fffdf9;
+  color: #55483d;
+  box-shadow: 0 3px 10px rgba(70,50,30,.08);
+}
 
-    .section-title {
-      font-size: 16px;
-      font-weight: 800;
-      margin: 25px 3px 11px;
-    }
+/* COMMON CARD */
 
-    .dog-list {
-      display: grid;
-      gap: 10px;
-    }
+.card {
+  background: #fffdf9;
+  border-radius: 21px;
+  box-shadow: 0 5px 20px rgba(70,50,30,.06);
+}
 
-    .dog-card {
-      background: #fffdf9;
-      border-radius: 18px;
-      padding: 15px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 3px 14px rgba(80, 60, 40, 0.055);
-    }
+/* TODAY */
 
-    .dog-name {
-      font-size: 16px;
-      font-weight: 750;
-    }
+.date-card {
+  padding: 19px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
 
-    .status {
-      margin-top: 4px;
-      font-size: 12px;
-      color: #aaa098;
-    }
+.date-label {
+  font-size: 11px;
+  color: #a69b91;
+  font-weight: 700;
+  letter-spacing: .7px;
+}
 
-    .buttons {
-      display: flex;
-      gap: 7px;
-    }
+.today {
+  font-size: 21px;
+  font-weight: 850;
+  margin-top: 3px;
+}
 
-    button {
-      border: 0;
-      cursor: pointer;
-      width: 46px;
-      height: 40px;
-      border-radius: 13px;
-      font-size: 18px;
-      font-weight: 800;
-      transition: 0.15s;
-    }
+.rate {
+  text-align: right;
+}
 
-    button:active {
-      transform: scale(0.94);
-    }
+.rate-number {
+  font-size: 25px;
+  font-weight: 850;
+  color: #9c7d5f;
+}
 
-    .yes {
-      background: #eee9e1;
-      color: #827464;
-    }
+.rate-label {
+  font-size: 11px;
+  color: #aaa098;
+}
 
-    .no {
-      background: #eee9e1;
-      color: #827464;
-    }
+.section-title {
+  font-size: 16px;
+  font-weight: 850;
+  margin: 22px 3px 10px;
+}
 
-    .yes.active {
-      background: #b99b78;
-      color: white;
-      box-shadow: 0 4px 10px rgba(150, 120, 85, 0.25);
-    }
+.dog-list {
+  display: grid;
+  gap: 9px;
+}
 
-    .no.active {
-      background: #8f8881;
-      color: white;
-    }
+.dog-card {
+  background: #fffdf9;
+  border-radius: 18px;
+  padding: 14px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 3px 13px rgba(70,50,30,.045);
+}
 
-    .loading {
-      text-align: center;
-      padding: 35px 0;
-      color: #999087;
-    }
+.dog-name {
+  font-size: 15px;
+  font-weight: 800;
+}
 
-    .bottom-info {
-      margin-top: 25px;
-      padding: 17px;
-      background: #eee7de;
-      border-radius: 17px;
-      text-align: center;
-      font-size: 12px;
-      color: #8d8277;
-      line-height: 1.6;
-    }
+.status {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #aaa098;
+}
 
-    .error {
-      background: #f1dddd;
-      color: #875d5d;
-      padding: 14px;
-      border-radius: 15px;
-      font-size: 13px;
-      margin-bottom: 15px;
-      display: none;
-    }
-  </style>
+.buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.walk-btn {
+  border: 0;
+  width: 43px;
+  height: 38px;
+  border-radius: 12px;
+  background: #eee9e1;
+  color: #82766a;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.walk-btn.active-yes {
+  background: #b79a78;
+  color: white;
+}
+
+.walk-btn.active-no {
+  background: #8f8881;
+  color: white;
+}
+
+.walk-btn:active {
+  transform: scale(.94);
+}
+
+/* MONTH */
+
+.month-header {
+  padding: 20px;
+  margin-bottom: 13px;
+}
+
+.month-title {
+  font-size: 20px;
+  font-weight: 850;
+}
+
+.month-summary {
+  margin-top: 6px;
+  color: #91867c;
+  font-size: 12px;
+}
+
+.calendar {
+  display: grid;
+  gap: 8px;
+}
+
+.day-card {
+  background: #fffdf9;
+  border-radius: 17px;
+  padding: 13px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.day-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.day-number {
+  width: 39px;
+  height: 39px;
+  border-radius: 13px;
+  background: #eee8df;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 850;
+}
+
+.day-info strong {
+  font-size: 14px;
+}
+
+.day-info small {
+  display: block;
+  color: #aaa098;
+  margin-top: 3px;
+  font-size: 11px;
+}
+
+.day-rate {
+  font-size: 13px;
+  font-weight: 800;
+  color: #9b7c5e;
+}
+
+/* STATISTICS */
+
+.stats-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.summary-box {
+  background: #fffdf9;
+  border-radius: 19px;
+  padding: 17px;
+  box-shadow: 0 4px 15px rgba(70,50,30,.05);
+}
+
+.summary-label {
+  color: #a0978e;
+  font-size: 11px;
+}
+
+.summary-value {
+  font-size: 24px;
+  font-weight: 850;
+  margin-top: 4px;
+}
+
+.stat-list {
+  display: grid;
+  gap: 9px;
+}
+
+.stat-card {
+  background: #fffdf9;
+  border-radius: 18px;
+  padding: 15px;
+}
+
+.stat-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-name {
+  font-size: 15px;
+  font-weight: 850;
+}
+
+.stat-count {
+  font-size: 14px;
+  font-weight: 800;
+  color: #9b7c5e;
+}
+
+.progress {
+  height: 7px;
+  background: #eee8df;
+  border-radius: 10px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #b79a78;
+  border-radius: 10px;
+  transition: width .3s;
+}
+
+.stat-bottom {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  color: #aaa098;
+  font-size: 10px;
+}
+
+/* LOADING */
+
+.loading {
+  text-align: center;
+  padding: 35px;
+  color: #999087;
+}
+
+.error {
+  display: none;
+  background: #f1dddd;
+  color: #875d5d;
+  padding: 13px;
+  border-radius: 15px;
+  font-size: 12px;
+  margin-bottom: 14px;
+}
+
+.bottom-info {
+  margin-top: 22px;
+  padding: 16px;
+  background: #eee7de;
+  border-radius: 16px;
+  text-align: center;
+  font-size: 11px;
+  color: #8d8277;
+  line-height: 1.6;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 480px) {
+
+  .app {
+    padding: 20px 13px 40px;
+  }
+
+  h1 {
+    font-size: 25px;
+  }
+
+  .dog-card {
+    padding: 13px;
+  }
+
+  .walk-btn {
+    width: 41px;
+  }
+}
+</style>
 </head>
 
 <body>
@@ -199,28 +401,125 @@
   <div class="header">
     <div class="eyebrow">🐾 DAILY DOG WALK</div>
     <h1>우리집 댕댕이 산책일지</h1>
-    <div class="subtitle">오늘 우리 아이들은 산책했을까요?</div>
+    <div class="subtitle">우리 아이들의 산책을 함께 기록해요</div>
   </div>
 
-  <div class="date-card">
-    <div>
-      <div class="date-label">TODAY</div>
-      <div class="today" id="today"></div>
+
+  <div class="nav">
+    <button id="navToday" class="active" onclick="showPage('today')">
+      🐾 오늘
+    </button>
+
+    <button id="navMonth" onclick="showPage('month')">
+      📅 이번 달
+    </button>
+
+    <button id="navStats" onclick="showPage('stats')">
+      📊 통계
+    </button>
+  </div>
+
+
+  <div id="error" class="error"></div>
+
+
+  <!-- ===================== -->
+  <!-- 오늘 -->
+  <!-- ===================== -->
+
+  <section id="pageToday">
+
+    <div class="date-card card">
+
+      <div>
+        <div class="date-label">TODAY</div>
+        <div class="today" id="today"></div>
+      </div>
+
+      <div class="rate">
+        <div class="rate-number" id="todayRate">0%</div>
+        <div class="rate-label">오늘 산책률</div>
+      </div>
+
     </div>
 
-    <div class="rate">
-      <div class="rate-number" id="rate">0%</div>
-      <div class="rate-label">오늘 산책률</div>
+
+    <div class="section-title">
+      🐶 오늘의 산책 체크
     </div>
-  </div>
 
-  <div class="error" id="error"></div>
+    <div id="dogList" class="dog-list">
+      <div class="loading">기록을 불러오는 중...</div>
+    </div>
 
-  <div class="section-title">🐶 오늘의 산책 체크</div>
+  </section>
 
-  <div class="dog-list" id="dogList">
-    <div class="loading">강아지들을 불러오는 중...</div>
-  </div>
+
+  <!-- ===================== -->
+  <!-- 이번 달 -->
+  <!-- ===================== -->
+
+  <section id="pageMonth" class="hidden">
+
+    <div class="month-header card">
+
+      <div class="month-title" id="monthTitle"></div>
+
+      <div class="month-summary" id="monthSummary">
+        이번 달 산책 기록
+      </div>
+
+    </div>
+
+    <div id="calendar" class="calendar">
+      <div class="loading">불러오는 중...</div>
+    </div>
+
+  </section>
+
+
+  <!-- ===================== -->
+  <!-- 통계 -->
+  <!-- ===================== -->
+
+  <section id="pageStats" class="hidden">
+
+    <div class="stats-summary">
+
+      <div class="summary-box">
+        <div class="summary-label">
+          이번 달 총 산책
+        </div>
+
+        <div class="summary-value" id="totalWalks">
+          0
+        </div>
+      </div>
+
+
+      <div class="summary-box">
+        <div class="summary-label">
+          전체 평균 산책률
+        </div>
+
+        <div class="summary-value" id="averageRate">
+          0%
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="section-title">
+      🐕 강아지별 산책 기록
+    </div>
+
+    <div id="statList" class="stat-list">
+      <div class="loading">통계를 계산하는 중...</div>
+    </div>
+
+  </section>
+
 
   <div class="bottom-info">
     ○ 산책 완료 &nbsp;&nbsp; × 오늘은 못 갔어요<br>
@@ -232,256 +531,639 @@
 
 <script>
 
-  // ==========================
-  // Google Apps Script 주소
-  // ==========================
+/* =====================================
+   Google Apps Script
+===================================== */
 
-  const API =
-    "https://script.google.com/macros/s/AKfycbwXn6-HoEyTpKpA0p91VXeLAh9FbVIMnzpWLJj4_3N0RJJVTAoWsOE5KEBZuEBi52haJA/exec";
-
-
-  // ==========================
-  // 우리집 강아지
-  // ==========================
-
-  const dogs = [
-    "짜장",
-    "카오",
-    "두꽃",
-    "완두",
-    "보보",
-    "송",
-    "빈",
-    "채채",
-    "양파",
-    "무지",
-    "타오",
-    "카노",
-    "로랑"
-  ];
+const API =
+"https://script.google.com/macros/s/AKfycbwXn6-HoEyTpKpA0p91VXeLAh9FbVIMnzpWLJj4_3N0RJJVTAoWsOE5KEBZuEBi52haJA/exec";
 
 
-  // ==========================
-  // 오늘 날짜
-  // ==========================
+/* =====================================
+   강아지 목록
+===================================== */
 
-  function getToday() {
+const dogs = [
+  "짜장",
+  "카오",
+  "두꽃",
+  "완두",
+  "보보",
+  "송",
+  "빈",
+  "채채",
+  "양파",
+  "무지",
+  "타오",
+  "카노",
+  "로랑"
+];
 
-    const now = new Date();
 
-    const year = now.getFullYear();
-    const month =
-      String(now.getMonth() + 1).padStart(2, "0");
-    const day =
-      String(now.getDate()).padStart(2, "0");
+let records = [];
 
-    return `${year}-${month}-${day}`;
+
+/* =====================================
+   날짜
+===================================== */
+
+function getToday() {
+
+  const d = new Date();
+
+  return (
+    d.getFullYear() +
+    "-" +
+    String(d.getMonth() + 1).padStart(2,"0") +
+    "-" +
+    String(d.getDate()).padStart(2,"0")
+  );
+}
+
+
+const today = getToday();
+
+const currentYear =
+  Number(today.substring(0,4));
+
+const currentMonth =
+  Number(today.substring(5,7));
+
+
+document.getElementById("today").textContent =
+  today.replaceAll("-", ". ");
+
+
+/* =====================================
+   데이터 불러오기
+===================================== */
+
+async function loadData() {
+
+  try {
+
+    const response = await fetch(API);
+
+    records = await response.json();
+
+    drawToday();
+    drawMonth();
+    drawStats();
+
+  } catch(error) {
+
+    console.error(error);
+
+    document.getElementById("error").style.display =
+      "block";
+
+    document.getElementById("error").textContent =
+      "기록을 불러오지 못했어요.";
+
+    drawToday();
+    drawMonth();
+    drawStats();
   }
+}
 
 
-  const today = getToday();
+/* =====================================
+   특정 기록 찾기
+===================================== */
 
-  document.getElementById("today").textContent =
-    today.replaceAll("-", ". ");
+function getStatus(date, dog) {
 
-
-  // ==========================
-  // 데이터 불러오기
-  // ==========================
-
-  let records = [];
-
-
-  async function loadData() {
-
-    try {
-
-      const response = await fetch(API);
-
-      records = await response.json();
-
-      drawDogs();
-
-    } catch (error) {
-
-      console.error(error);
-
-      document.getElementById("error").style.display =
-        "block";
-
-      document.getElementById("error").textContent =
-        "기록을 불러오지 못했어요. 잠시 후 다시 시도해주세요.";
-
-      drawDogs();
-
-    }
-  }
-
-
-  // ==========================
-  // 오늘 기록 찾기
-  // ==========================
-
-  function getStatus(dog) {
-
-    const record = records.find(function(item) {
+  const found =
+    records.find(function(item) {
 
       return (
-        item.date === today &&
+        item.date === date &&
         item.dog === dog
       );
 
     });
 
-    return record ? record.status : "";
+  return found ? found.status : "";
+}
 
-  }
+
+/* =====================================
+   오늘 화면
+===================================== */
+
+function drawToday() {
+
+  const list =
+    document.getElementById("dogList");
+
+  list.innerHTML = "";
 
 
-  // ==========================
-  // 화면 그리기
-  // ==========================
+  dogs.forEach(function(dog) {
 
-  function drawDogs() {
+    const status =
+      getStatus(today, dog);
 
-    const container =
-      document.getElementById("dogList");
 
-    container.innerHTML = "";
+    const card =
+      document.createElement("div");
 
-    dogs.forEach(function(dog) {
+    card.className = "dog-card";
 
-      const status = getStatus(dog);
 
-      const card =
-        document.createElement("div");
+    card.innerHTML = `
 
-      card.className = "dog-card";
+      <div>
 
-      card.innerHTML = `
-
-        <div>
-          <div class="dog-name">${dog}</div>
-
-          <div class="status">
-            ${
-              status === "y"
-                ? "오늘 산책 완료 🐾"
-                : status === "n"
-                  ? "오늘은 쉬는 날"
-                  : "아직 기록하지 않았어요"
-            }
-          </div>
+        <div class="dog-name">
+          ${dog}
         </div>
 
-        <div class="buttons">
-
-          <button
-            class="yes ${status === "y" ? "active" : ""}"
-            onclick="saveWalk('${dog}', 'y')">
-            ○
-          </button>
-
-          <button
-            class="no ${status === "n" ? "active" : ""}"
-            onclick="saveWalk('${dog}', 'n')">
-            ×
-          </button>
-
+        <div class="status">
+          ${
+            status === "y"
+            ? "오늘 산책 완료 🐾"
+            : status === "n"
+            ? "오늘은 쉬는 날"
+            : "아직 기록하지 않았어요"
+          }
         </div>
-      `;
 
-      container.appendChild(card);
+      </div>
 
-    });
 
-    updateRate();
+      <div class="buttons">
+
+        <button
+          class="walk-btn ${status === "y" ? "active-yes" : ""}"
+          onclick="saveWalk('${dog}','y')">
+          ○
+        </button>
+
+        <button
+          class="walk-btn ${status === "n" ? "active-no" : ""}"
+          onclick="saveWalk('${dog}','n')">
+          ×
+        </button>
+
+      </div>
+
+    `;
+
+
+    list.appendChild(card);
+
+  });
+
+
+  updateTodayRate();
+}
+
+
+/* =====================================
+   오늘 산책률
+===================================== */
+
+function updateTodayRate() {
+
+  let done = 0;
+
+  dogs.forEach(function(dog) {
+
+    if(getStatus(today,dog) === "y") {
+      done++;
+    }
+
+  });
+
+
+  const percent =
+    Math.round(
+      (done / dogs.length) * 100
+    );
+
+
+  document.getElementById("todayRate").textContent =
+    percent + "%";
+}
+
+
+/* =====================================
+   저장
+===================================== */
+
+async function saveWalk(dog,status) {
+
+  const url =
+    API +
+    "?date=" +
+    encodeURIComponent(today) +
+    "&dog=" +
+    encodeURIComponent(dog) +
+    "&status=" +
+    encodeURIComponent(status);
+
+
+  try {
+
+    await fetch(url);
+
+
+    const existing =
+      records.find(function(item) {
+
+        return (
+          item.date === today &&
+          item.dog === dog
+        );
+
+      });
+
+
+    if(existing) {
+
+      existing.status = status;
+
+    } else {
+
+      records.push({
+        date: today,
+        dog: dog,
+        status: status
+      });
+
+    }
+
+
+    drawToday();
+    drawMonth();
+    drawStats();
+
+  } catch(error) {
+
+    alert("저장에 실패했어요.");
+
   }
+}
 
 
-  // ==========================
-  // 산책률
-  // ==========================
+/* =====================================
+   이번 달 화면
+===================================== */
 
-  function updateRate() {
+function drawMonth() {
+
+  const calendar =
+    document.getElementById("calendar");
+
+  calendar.innerHTML = "";
+
+
+  const monthText =
+    currentYear +
+    "년 " +
+    currentMonth +
+    "월";
+
+
+  document.getElementById("monthTitle").textContent =
+    monthText;
+
+
+  /*
+    이번 달 1일부터 오늘까지 표시
+  */
+
+  const daysInMonth =
+    new Date(
+      currentYear,
+      currentMonth,
+      0
+    ).getDate();
+
+
+  let totalDone = 0;
+  let totalPossible = 0;
+
+
+  for(
+    let day = 1;
+    day <= daysInMonth;
+    day++
+  ) {
+
+    const date =
+      currentYear +
+      "-" +
+      String(currentMonth).padStart(2,"0") +
+      "-" +
+      String(day).padStart(2,"0");
+
+
+    /*
+      미래 날짜는 표시하지 않음
+    */
+
+    if(date > today) {
+      break;
+    }
+
 
     let done = 0;
 
+
     dogs.forEach(function(dog) {
 
-      if (getStatus(dog) === "y") {
+      if(getStatus(date,dog) === "y") {
         done++;
       }
 
     });
 
-    const percent =
-      Math.round((done / dogs.length) * 100);
 
-    document.getElementById("rate").textContent =
-      percent + "%";
+    totalDone += done;
+    totalPossible += dogs.length;
+
+
+    const percent =
+      Math.round(
+        (done / dogs.length) * 100
+      );
+
+
+    const card =
+      document.createElement("div");
+
+    card.className = "day-card";
+
+
+    card.innerHTML = `
+
+      <div class="day-left">
+
+        <div class="day-number">
+          ${day}
+        </div>
+
+        <div class="day-info">
+
+          <strong>
+            ${currentMonth}월 ${day}일
+          </strong>
+
+          <small>
+            ${done}마리 산책
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <div class="day-rate">
+        ${percent}%
+      </div>
+
+    `;
+
+
+    calendar.appendChild(card);
+
   }
 
 
-  // ==========================
-  // 저장
-  // ==========================
-
-  async function saveWalk(dog, status) {
-
-    try {
-
-      const url =
-        API +
-        "?date=" + encodeURIComponent(today) +
-        "&dog=" + encodeURIComponent(dog) +
-        "&status=" + encodeURIComponent(status);
-
-      await fetch(url);
-
-      // 화면에서도 즉시 변경
-      const existing =
-        records.find(function(item) {
-
-          return (
-            item.date === today &&
-            item.dog === dog
-          );
-
-        });
+  const monthRate =
+    totalPossible === 0
+    ? 0
+    : Math.round(
+        (totalDone / totalPossible) * 100
+      );
 
 
-      if (existing) {
+  document.getElementById("monthSummary").textContent =
+    "이번 달 전체 산책률 " +
+    monthRate +
+    "%";
+}
 
-        existing.status = status;
 
-      } else {
+/* =====================================
+   통계
+===================================== */
 
-        records.push({
-          date: today,
-          dog: dog,
-          status: status
-        });
+function drawStats() {
+
+  const list =
+    document.getElementById("statList");
+
+  list.innerHTML = "";
+
+
+  let totalWalks = 0;
+
+
+  const stats = dogs.map(function(dog) {
+
+    let count = 0;
+
+
+    records.forEach(function(item) {
+
+      if(
+        item.dog === dog &&
+        item.status === "y" &&
+        item.date &&
+        item.date.substring(0,7) ===
+        today.substring(0,7)
+      ) {
+
+        count++;
 
       }
 
-      drawDogs();
+    });
 
-    } catch (error) {
 
-      console.error(error);
+    totalWalks += count;
 
-      alert("저장에 실패했어요. 다시 눌러주세요.");
 
-    }
+    /*
+      현재 날짜까지를 기준으로 산책률 계산
+    */
+
+    const elapsedDays =
+      Number(today.substring(8,10));
+
+
+    const rate =
+      elapsedDays === 0
+      ? 0
+      : Math.round(
+          (count / elapsedDays) * 100
+        );
+
+
+    return {
+      dog: dog,
+      count: count,
+      rate: Math.min(rate,100)
+    };
+
+  });
+
+
+  /*
+    많이 산책한 강아지가 위로
+  */
+
+  stats.sort(function(a,b) {
+
+    return b.count - a.count;
+
+  });
+
+
+  stats.forEach(function(stat) {
+
+    const card =
+      document.createElement("div");
+
+    card.className = "stat-card";
+
+
+    card.innerHTML = `
+
+      <div class="stat-top">
+
+        <div class="stat-name">
+          ${stat.dog}
+        </div>
+
+        <div class="stat-count">
+          ${stat.count}회
+        </div>
+
+      </div>
+
+
+      <div class="progress">
+
+        <div
+          class="progress-bar"
+          style="width:${stat.rate}%">
+        </div>
+
+      </div>
+
+
+      <div class="stat-bottom">
+
+        <span>
+          이번 달 산책
+        </span>
+
+        <span>
+          ${stat.rate}%
+        </span>
+
+      </div>
+
+    `;
+
+
+    list.appendChild(card);
+
+  });
+
+
+  document.getElementById("totalWalks").textContent =
+    totalWalks + "회";
+
+
+  const average =
+    dogs.length === 0
+    ? 0
+    : Math.round(
+        totalWalks /
+        (dogs.length * Number(today.substring(8,10))) *
+        100
+      );
+
+
+  document.getElementById("averageRate").textContent =
+    Math.min(average,100) + "%";
+}
+
+
+/* =====================================
+   페이지 전환
+===================================== */
+
+function showPage(page) {
+
+  document.getElementById("pageToday")
+    .classList.add("hidden");
+
+  document.getElementById("pageMonth")
+    .classList.add("hidden");
+
+  document.getElementById("pageStats")
+    .classList.add("hidden");
+
+
+  document.getElementById("navToday")
+    .classList.remove("active");
+
+  document.getElementById("navMonth")
+    .classList.remove("active");
+
+  document.getElementById("navStats")
+    .classList.remove("active");
+
+
+  if(page === "today") {
+
+    document.getElementById("pageToday")
+      .classList.remove("hidden");
+
+    document.getElementById("navToday")
+      .classList.add("active");
+
   }
 
 
-  // ==========================
-  // 시작
-  // ==========================
+  if(page === "month") {
 
-  loadData();
+    document.getElementById("pageMonth")
+      .classList.remove("hidden");
+
+    document.getElementById("navMonth")
+      .classList.add("active");
+
+    drawMonth();
+
+  }
+
+
+  if(page === "stats") {
+
+    document.getElementById("pageStats")
+      .classList.remove("hidden");
+
+    document.getElementById("navStats")
+      .classList.add("active");
+
+    drawStats();
+
+  }
+}
+
+
+/* =====================================
+   시작
+===================================== */
+
+loadData();
 
 </script>
 
